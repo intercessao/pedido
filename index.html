@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+  <meta name="apple-mobile-web-app-title" content="Oração"/>
+  <meta name="theme-color" content="#FFFFFF"/>
+  <link rel="apple-touch-icon" href="icone.png"/>
+  <link rel="icon" type="image/png" sizes="192x192" href="icone.png"/>
+  <title>Pedido de Oração — Igreja Vértice</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+    :root{
+      --bg:#F8F8FA;
+      --white:#FFFFFF;
+      --text:#1A1D26;
+      --text2:#6E7280;
+      --text3:#A0A5B2;
+      --border:#EEEFF2;
+      --sage:#6A7765;
+      --navy:#3E495D;
+      --gold:#E2AF67;
+      --cream:#F4F0E7;
+      --r:14px;
+      --rr:50px;
+    }
+
+    body{
+      font-family:'Inter',system-ui,-apple-system,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      min-height:100vh;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    /* ── HEADER ── */
+    .hdr{
+      background:var(--white);
+      padding:48px 20px 24px;
+      border-bottom:1px solid var(--border);
+    }
+    .hdr-inner{
+      max-width:520px;margin:0 auto;
+    }
+    .hdr-title-row{
+      display:flex;align-items:center;gap:10px;margin-bottom:12px;
+    }
+    .hdr-logo{width:22px;height:auto;flex-shrink:0;opacity:0.55}
+    .hdr h1{
+      font-size:24px;
+      font-weight:800;
+      color:var(--text);
+      letter-spacing:-0.8px;
+    }
+    .hdr-desc{
+      font-size:13px;
+      line-height:1.7;
+      color:var(--text2);
+      font-weight:400;
+    }
+
+    @media(max-width:480px){
+      .hdr{padding:40px 16px 20px}
+      .hdr h1{font-size:20px}
+      .hdr-desc{font-size:12px}
+    }
+
+    /* ── FORM CONTAINER ── */
+    .cnt{
+      max-width:520px;
+      margin:0 auto;
+      padding:24px 20px 40px;
+    }
+
+    @media(max-width:480px){
+      .cnt{padding:20px 16px 32px}
+    }
+
+    /* ── FORM GROUP ── */
+    .fg{
+      margin-bottom:22px;
+    }
+    .fg-label{
+      display:block;
+      font-size:13px;
+      font-weight:700;
+      color:var(--text);
+      margin-bottom:3px;
+    }
+    .fg-hint{
+      display:block;
+      font-size:11px;
+      font-weight:400;
+      color:var(--text3);
+      margin-bottom:8px;
+      line-height:1.5;
+    }
+    .fg-input,
+    .fg-textarea{
+      width:100%;
+      padding:12px 14px;
+      border-radius:12px;
+      border:1.5px solid var(--border);
+      font-family:'Inter',system-ui,-apple-system,sans-serif;
+      font-size:13px;
+      color:var(--text);
+      background:var(--white);
+      outline:none;
+      transition:border .2s, box-shadow .2s;
+    }
+    .fg-input:focus,
+    .fg-textarea:focus{
+      border-color:var(--navy);
+      box-shadow:0 0 0 3px rgba(62,73,93,.08);
+    }
+    .fg-input::placeholder,
+    .fg-textarea::placeholder{
+      color:var(--text3);
+    }
+    .fg-textarea{
+      resize:vertical;
+      min-height:120px;
+      line-height:1.7;
+    }
+
+    /* required indicator */
+    .req{
+      font-size:9px;
+      font-weight:600;
+      color:#D64545;
+      background:rgba(214,69,69,.08);
+      padding:2px 6px;
+      border-radius:4px;
+      margin-left:6px;
+      vertical-align:middle;
+      letter-spacing:.3px;
+    }
+
+    /* ── SUBMIT BUTTON ── */
+    .btn-submit{
+      width:100%;
+      padding:14px;
+      border-radius:var(--rr);
+      border:none;
+      background:var(--navy);
+      color:#fff;
+      font-family:'Inter',system-ui,-apple-system,sans-serif;
+      font-size:14px;
+      font-weight:600;
+      cursor:pointer;
+      transition:all .2s;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      margin-top:8px;
+    }
+    .btn-submit:hover{background:#333E50}
+    .btn-submit:active{transform:scale(.98)}
+    .btn-submit:disabled{
+      opacity:.6;
+      cursor:not-allowed;
+      transform:none;
+    }
+    .btn-submit svg{width:18px;height:18px}
+
+    /* ── SPINNER ── */
+    .spinner{
+      width:18px;height:18px;
+      border:2.5px solid rgba(255,255,255,.3);
+      border-top-color:#fff;
+      border-radius:50%;
+      animation:spin .6s linear infinite;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* ── SUCCESS OVERLAY ── */
+    .overlay{
+      display:none;
+      position:fixed;inset:0;
+      background:rgba(26,29,38,.35);
+      backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+      z-index:300;
+      align-items:center;justify-content:center;
+    }
+    .overlay.open{display:flex}
+    .success-box{
+      background:var(--white);
+      border-radius:20px;
+      padding:32px 28px 28px;
+      width:90%;max-width:360px;
+      text-align:center;
+      animation:pop .25s cubic-bezier(.16,1,.3,1);
+    }
+    @keyframes pop{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
+
+    .success-icon{
+      width:56px;height:56px;
+      border-radius:50%;
+      background:rgba(106,119,101,.1);
+      display:flex;align-items:center;justify-content:center;
+      margin:0 auto 16px;
+    }
+    .success-icon svg{width:28px;height:28px;color:var(--sage)}
+
+    .success-box h3{
+      font-size:17px;
+      font-weight:700;
+      color:var(--text);
+      margin-bottom:6px;
+    }
+    .success-box p{
+      font-size:12px;
+      color:var(--text2);
+      line-height:1.6;
+      margin-bottom:20px;
+    }
+    .btn-close{
+      width:100%;
+      padding:12px;
+      border-radius:var(--rr);
+      border:none;
+      background:var(--bg);
+      color:var(--text);
+      font-family:'Inter',system-ui,-apple-system,sans-serif;
+      font-size:13px;
+      font-weight:600;
+      cursor:pointer;
+      transition:all .15s;
+    }
+    .btn-close:hover{background:var(--border)}
+
+    /* ── FOOTER ── */
+    .fv{
+      text-align:center;
+      color:#D0CEC8;
+      font-size:11px;
+      font-style:italic;
+      line-height:1.7;
+      padding:0 20px 28px;
+      max-width:520px;
+      margin:0 auto;
+    }
+    .fv .ref{
+      display:block;
+      margin-top:3px;
+      font-style:normal;
+      font-weight:600;
+      font-size:9px;
+      color:#DDD9D0;
+    }
+
+    /* ── ERROR STATE ── */
+    .fg-input.error,
+    .fg-textarea.error{
+      border-color:#D64545;
+    }
+    .fg-error-msg{
+      font-size:11px;
+      color:#D64545;
+      font-weight:500;
+      margin-top:4px;
+      display:none;
+    }
+    .fg-error-msg.show{display:block}
+  </style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header class="hdr">
+  <div class="hdr-inner">
+    <div class="hdr-title-row">
+      <svg class="hdr-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 287.37 400"><path fill="#231f20" d="M281.79,0l-139.8,141.99L0,70.99,281.79,0ZM170,400l-21.73-249.95,53.04-53.87L287.37,8.78l-117.36,391.22Z"/></svg>
+      <h1>Pedido de Oração</h1>
+    </div>
+    <p class="hdr-desc">
+      Este formulário foi criado para você compartilhar seus pedidos de oração com a <strong>Igreja Vértice</strong>.
+      Queremos caminhar com você em fé, apresentando cada necessidade diante de Deus com amor, cuidado e confidencialidade.
+    </p>
+  </div>
+</header>
+
+<!-- ── FORM ── -->
+<div class="cnt">
+  <form id="prayerForm" novalidate>
+
+    <!-- Nome -->
+    <div class="fg">
+      <label class="fg-label" for="nome">Nome</label>
+      <span class="fg-hint">Você pode deixar essa caixa em branco se preferir permanecer anônimo(a).</span>
+      <input class="fg-input" type="text" id="nome" name="nome" placeholder="Seu nome..." autocomplete="name"/>
+    </div>
+
+    <!-- Contato -->
+    <div class="fg">
+      <label class="fg-label" for="contato">Contato</label>
+      <span class="fg-hint">Caso deseje que entremos em contato, escreva abaixo o seu telefone ou e-mail.</span>
+      <input class="fg-input" type="text" id="contato" name="contato" placeholder="Telefone ou e-mail..." autocomplete="email tel"/>
+    </div>
+
+    <!-- Pedido -->
+    <div class="fg">
+      <label class="fg-label" for="pedido">Pedido de oração <span class="req">OBRIGATÓRIO</span></label>
+      <span class="fg-hint">Coloque o seu pedido de oração aqui.</span>
+      <textarea class="fg-textarea" id="pedido" name="pedido" placeholder="Escreva seu pedido de oração..." required></textarea>
+      <div class="fg-error-msg" id="pedidoError">Por favor, escreva seu pedido de oração.</div>
+    </div>
+
+    <!-- Submit -->
+    <button type="submit" class="btn-submit" id="submitBtn">
+      <i data-lucide="send"></i>
+      Enviar pedido
+    </button>
+
+  </form>
+</div>
+
+<!-- ── FOOTER ── -->
+<div class="fv">
+  "Não andem ansiosos por coisa alguma, mas em tudo, pela oração e súplicas, com ação de graças, apresentem seus pedidos a Deus."
+  <span class="ref">Filipenses 4:6</span>
+</div>
+
+<!-- ── SUCCESS OVERLAY ── -->
+<div class="overlay" id="successOverlay">
+  <div class="success-box">
+    <div class="success-icon"><i data-lucide="heart-handshake"></i></div>
+    <h3>Seu pedido de oração foi registrado!</h3>
+    <p>Agradecemos por compartilhar conosco. Estaremos orando com fé e amor por você.</p>
+    <button class="btn-close" id="closeSuccess">Fechar</button>
+  </div>
+</div>
+
+<script>
+  lucide.createIcons();
+
+  // ══════════════════════════════════════════════
+  // IMPORTANTE: Cole aqui a URL do seu Google Apps Script
+  // Siga as instruções para obter essa URL
+  // ══════════════════════════════════════════════
+  const SCRIPT_URL = "COLE_SUA_URL_AQUI";
+
+  const form = document.getElementById("prayerForm");
+  const submitBtn = document.getElementById("submitBtn");
+  const pedidoField = document.getElementById("pedido");
+  const pedidoError = document.getElementById("pedidoError");
+  const overlay = document.getElementById("successOverlay");
+  const closeBtn = document.getElementById("closeSuccess");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    // Validate
+    const pedido = pedidoField.value.trim();
+    if (!pedido) {
+      pedidoField.classList.add("error");
+      pedidoError.classList.add("show");
+      pedidoField.focus();
+      return;
+    }
+    pedidoField.classList.remove("error");
+    pedidoError.classList.remove("show");
+
+    // Disable button & show spinner
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<div class="spinner"></div> Enviando...';
+
+    const agora = new Date();
+    const data = {
+      nome: document.getElementById("nome").value.trim() || "Anônimo(a)",
+      contato: document.getElementById("contato").value.trim() || "Não informado",
+      pedido: pedido,
+      data: agora.toLocaleDateString("pt-BR", { day:"2-digit", month:"2-digit", year:"numeric" }),
+      hora: agora.toLocaleTimeString("pt-BR", { hour:"2-digit", minute:"2-digit" })
+    };
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      // Show success
+      overlay.classList.add("open");
+      form.reset();
+
+    } catch (err) {
+      alert("Ocorreu um erro ao enviar. Tente novamente.");
+      console.error(err);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<i data-lucide="send"></i> Enviar pedido';
+      lucide.createIcons();
+    }
+  });
+
+  // Remove error on typing
+  pedidoField.addEventListener("input", () => {
+    if (pedidoField.value.trim()) {
+      pedidoField.classList.remove("error");
+      pedidoError.classList.remove("show");
+    }
+  });
+
+  // Close overlay
+  closeBtn.addEventListener("click", () => {
+    overlay.classList.remove("open");
+  });
+  overlay.addEventListener("click", (e) => {
+    if (e.target === overlay) overlay.classList.remove("open");
+  });
+</script>
+
+</body>
+</html>
